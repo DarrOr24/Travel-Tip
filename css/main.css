@@ -4,6 +4,7 @@
 @import url(cmps/locs.css);
 @import url(cmps/selected-loc.css);
 @import url(cmps/pill-box.css);
+@import url(cmps/modal.css);
 
 @media (min-width: 750px) {
     main {

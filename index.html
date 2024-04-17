@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://kit.fontawesome.com/49cdaa1449.js" crossorigin="anonymous"></script>    
+    <script src="https://kit.fontawesome.com/49cdaa1449.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/main.css">
     <title>TravelTip</title>
 </head>
@@ -82,6 +82,20 @@
             </section>
         </div>
     </main>
+    <dialog class="locs-modal">
+        <form method="dialog" onsubmit="app.submitForm(event)">
+            <h2>New location!</h2>
+            <div>
+                <label for="loc-name">Name:</label>
+                <input type="text" id="loc-name">
+            </div>
+            <div><label for="loc-rate">Rate:</label>
+                <input type="number" max="5" min="1" id="loc-rate">
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </dialog>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
     <script type="module" src="js/app.controller.js"></script>

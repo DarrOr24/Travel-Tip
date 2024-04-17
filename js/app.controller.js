@@ -9,10 +9,15 @@ window.onload = onInit
 // functions that are called from DOM are defined on a global app object
 window.app = {
     onRemoveLoc,
-    onUpdateLoc,
+    onUpdateLoc: updateLoc,
     onSelectLoc,
     onPanToUserPos,
     onSearchAddress,
+    onMapTouch,
+    openModal,
+    submitForm,
+    updateLoc,
+    onUpdateLoc,
     onCopyLoc,
     onShareLoc,
     onSetSortBy,
@@ -25,7 +30,7 @@ function onInit() {
     mapService.initMap()
         .then(() => {
             // onPanToTokyo()
-            mapService.addClickListener(onAddLoc)
+            mapService.addClickListener(onMapTouch)
         })
         .catch(err => {
             console.error('OOPs:', err)
@@ -99,13 +104,49 @@ function onSearchAddress(ev) {
         })
 }
 
-function onAddLoc(geo) {
-    const locName = prompt('Loc name', geo.address || 'Just a place')
-    if (!locName) return
+function onMapTouch(geo) {
+    openModal('add', geo)
+}
 
+function openModal(action, data) {
+    const modal = document.querySelector('.locs-modal')
+    modal.dataset.locData = JSON.stringify(data)
+    if (action === 'add') {
+        document.querySelector('input[id="loc-name"]').value = data.address
+        document.querySelector('input[id="loc-rate"]').value = 3
+        document.querySelector('.locs-modal h2').innerHTML = 'New Location!'
+        document.querySelector('form div').classList.remove('hide')
+        modal.dataset.action = 'add'
+    }
+    if (action === 'update') {
+        document.querySelector('input[id="loc-rate"]').value = 0
+        document.querySelector('.locs-modal h2').innerHTML = 'Enter new rating...'
+        document.querySelector('form div').classList.add('hide')
+        modal.dataset.action = 'update'
+    }
+    modal.showModal()
+
+}
+
+function submitForm(event) {
+    event.preventDefault()
+    const modal = document.querySelector('.locs-modal')
+    const name = document.querySelector('input[id="loc-name"]').value
+    const rate = document.querySelector('input[id="loc-rate"]').value
+    const data = JSON.parse(modal.dataset.locData)
+    const action = modal.dataset.action
+    if (action === 'add') addLoc(name, rate, data)
+    if (action === 'update') updateLoc(rate, data)
+    modal.close()
+}
+
+
+
+
+function addLoc(name, rate, geo) {
     const loc = {
-        name: locName,
-        rate: +prompt(`Rate (1-5)`, '3'),
+        name,
+        rate,
         geo
     }
     locService.save(loc)
@@ -152,24 +193,28 @@ function onPanToUserPos() {
         })
 }
 
+function updateLoc(rate, id) {
+    locService.getById(id)
+        .then(loc => {
+            loc.rate = rate
+            locService.save(loc)
+                .then(savedLoc => {
+                    flashMsg(`Rate was set to: ${savedLoc.rate}`)
+                    loadAndRenderLocs()
+                })
+                .catch(err => {
+                    console.error('OOPs:', err)
+                    flashMsg('Cannot update location')
+                })
+
+
+        })
+}
+
 function onUpdateLoc(locId) {
     locService.getById(locId)
-        .then(loc => {
-            const rate = prompt('New rate?', loc.rate)
-            if (rate !== loc.rate) {
-                loc.rate = rate
-                locService.save(loc)
-                    .then(savedLoc => {
-                        flashMsg(`Rate was set to: ${savedLoc.rate}`)
-                        loadAndRenderLocs()
-                    })
-                    .catch(err => {
-                        console.error('OOPs:', err)
-                        flashMsg('Cannot update location')
-                    })
+        .then(loc => openModal('update', loc.id))
 
-            }
-        })
 }
 
 function onSelectLoc(locId) {
