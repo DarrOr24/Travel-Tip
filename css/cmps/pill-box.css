@@ -1,0 +1,56 @@
+.theme {
+    position: aboslute;
+    right: 20px;
+}
+
+
+input[type="checkbox"] {
+    display: none;
+}
+
+.pill-checkbox-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    background-color: whitesmoke;
+    
+    width: 40px;
+    height: 20px;
+    /* margin: 0 auto; */
+    
+    border: 1px solid gray;
+    border-radius: 100vh;
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+}
+
+.fa-sun {
+    color: black;
+}
+
+.pill-checkbox-label > div {
+    position: absolute;
+    left: 0;
+    top:0;
+    scale: .85;
+
+    width: 50%;
+    height: 100%;
+    
+    background-color: black;
+    border-radius: 50%;
+    
+    transition: 0.4s ease-in-out;
+}
+
+:has(input:checked) .pill-checkbox-label  {
+    background-color: black;
+    color: whitesmoke;
+}
+
+:has(input:checked) .pill-checkbox-label > div {
+    background-color: whitesmoke;
+    translate: 100% 0;
+}

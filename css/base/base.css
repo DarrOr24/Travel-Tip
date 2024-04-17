@@ -1,12 +1,21 @@
 body {
-    background-color: var(--bg1);
-    color: #eee;
+    background-color: lightgoldenrodyellow;
     overflow-x: hidden;
 }
 
-header {
+:has(input:checked) body {
+    background-color: #222;
+    color: #eee;
+}
+
+:has(input:checked) header{
     background-color: var(--bg2);
     color: aliceblue;
+}
+
+header {
+    background-color:  lightgray;
+    color: var(--bg2);
     padding: 0.3em;
 }
 

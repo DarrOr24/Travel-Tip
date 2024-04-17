@@ -1,7 +1,13 @@
 .locs-container {
-    background-color: var(--bg3);
+    background-color: rgb(246, 246, 239);
+    color: var(--bg3); 
     padding: 0.5em;
     min-height: 100vh;
+}
+
+:has(input:checked) .locs-container {
+    background-color: var(--bg3);
+    color: aliceblue;
 }
 
 .loc-list {
@@ -20,10 +26,20 @@
 
 .loc-list li.active {
     color: var(--color3);
+    
 }
 
 .loc-list li.active .muted{
     color: var(--color4);
+    
+}
+
+:has(input:checked) .loc-list li .muted{
+    color: var(--gray1);
+}
+
+.loc-list li .muted{
+    color: var(--bg3);
 }
 
 .loc-btns {
@@ -52,8 +68,12 @@
 }
 
 .loc-filter {
-    background-color: var(--bg1);
+    background-color: lightgrey;
     padding: 0.3em;
+}
+
+:has(input:checked) .loc-filter{
+    background-color: var(--bg1);
 }
 
 .loc-filter input[type=text] {
