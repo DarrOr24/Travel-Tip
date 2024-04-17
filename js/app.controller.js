@@ -183,6 +183,7 @@ function onPanToUserPos() {
             storageService.set('locs', locs)
             loadAndRenderLocs()
 
+
         }
         )
 
@@ -229,6 +230,7 @@ function onSelectLoc(locId) {
 function displayLoc(loc) {
     document.querySelector('.loc.active')?.classList?.remove('active')
     document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
+    const distance = (loc.distance) ? 'Distance: ' + loc.distance + 'KM' : ''
 
     mapService.panTo(loc.geo)
     mapService.setMarker(loc)
@@ -237,6 +239,7 @@ function displayLoc(loc) {
     el.querySelector('.loc-name').innerText = loc.name
     el.querySelector('.loc-address').innerText = loc.geo.address
     el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
+    el.querySelector('.loc-distance').innerHTML = distance
     el.querySelector('[name=loc-copier]').value = window.location
     el.classList.add('show')
 
