@@ -1,6 +1,7 @@
 import { utilService } from './services/util.service.js'
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
+import { storageService } from './services/async-storage.service.js'
 
 window.onload = onInit
 
@@ -37,10 +38,12 @@ function renderLocs(locs) {
     // console.log('locs:', locs)
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
+        const distanceHTML = (loc.distance) ? `Distance: ${loc.distance} KM` : '';
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
+                <span>${distanceHTML}</span>
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
@@ -70,7 +73,7 @@ function renderLocs(locs) {
 
 function onRemoveLoc(locId) {
     const ans = confirm('Sure you want to remove?')
-    if(!ans) return
+    if (!ans) return
     locService.remove(locId)
         .then(() => {
             flashMsg('Location removed')
@@ -131,9 +134,18 @@ function onPanToUserPos() {
         .then(latLng => {
             mapService.panTo({ ...latLng, zoom: 15 })
             unDisplayLoc()
-            loadAndRenderLocs()
             flashMsg(`You are at Latitude: ${latLng.lat} Longitude: ${latLng.lng}`)
+            locService.setUserLocation(latLng)
+            return locService.addDistanceFromUser()
         })
+        .then(locs => {
+            storageService.set('locs', locs)
+            loadAndRenderLocs()
+
+        }
+        )
+
+
         .catch(err => {
             console.error('OOPs:', err)
             flashMsg('Cannot get your position')

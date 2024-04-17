@@ -20,6 +20,7 @@ const DB_KEY = 'locs'
 var gSortBy = { rate: -1 }
 var gFilterBy = { txt: '', minRate: 0 }
 var gPageIdx
+var gUserLocation = {}
 
 _createLocs()
 
@@ -31,7 +32,9 @@ export const locService = {
     setFilterBy,
     setSortBy,
     getLocCountByRateMap,
-    getLocCountByUpdateMap
+    getLocCountByUpdateMap,
+    setUserLocation,
+    addDistanceFromUser
 }
 
 function query() {
@@ -40,7 +43,7 @@ function query() {
 
             if (gFilterBy.txt) {
                 const regex = new RegExp(gFilterBy.txt, 'i')
-                locs = locs.filter(loc => regex.test(loc.name) || regex.test(loc.geo.address))  
+                locs = locs.filter(loc => regex.test(loc.name) || regex.test(loc.geo.address))
             }
             if (gFilterBy.minRate) {
                 locs = locs.filter(loc => loc.rate >= gFilterBy.minRate)
@@ -54,9 +57,9 @@ function query() {
 
             if (gSortBy.rate !== undefined) {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
-            }else if (gSortBy.name !== undefined) {
+            } else if (gSortBy.name !== undefined) {
                 locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
-            }else if (gSortBy.time !== undefined) {
+            } else if (gSortBy.time !== undefined) {
                 locs.sort((p1, p2) => (p1.createdAt - p2.createdAt) * gSortBy.time)
             }
 
@@ -73,6 +76,10 @@ function remove(locId) {
 }
 
 function save(loc) {
+    if (Object.keys(gUserLocation).length !== 0) {
+        const latLng = { lat: loc.geo.lat, lng: loc.geo.lng }
+        loc.distance = utilService.getDistance(gUserLocation, latLng, 'K')
+    }
     if (loc.id) {
         loc.updatedAt = Date.now()
         return storageService.put(DB_KEY, loc)
@@ -105,7 +112,7 @@ function getLocCountByUpdateMap() {
     return storageService.query(DB_KEY)
         .then(locs => {
             const locCountByUpdateMap = locs.reduce((map, loc) => {
-                if(loc.updatedAt === loc.createdAt) map.never++
+                if (loc.updatedAt === loc.createdAt) map.never++
                 else if (new Date(loc.updatedAt).toDateString() === new Date().toDateString()) map.today++
                 else map.past++
                 return map
@@ -169,6 +176,24 @@ function _createLoc(loc) {
     loc.id = utilService.makeId()
     loc.createdAt = loc.updatedAt = utilService.randomPastTime()
     return loc
+}
+
+function setUserLocation(latLng) {
+    gUserLocation = latLng
+}
+
+function addDistanceFromUser() {
+    return storageService.query(DB_KEY)
+        .then(locations => {
+            const updatedLocs= locations.map(loc => {
+                const currLatLng = { lat: loc.geo.lat, lng: loc.geo.lng }
+                loc.distance = utilService.getDistance(gUserLocation, currLatLng, 'K')
+                return loc
+            })
+            return updatedLocs
+        })
+        
+    
 }
 
 
