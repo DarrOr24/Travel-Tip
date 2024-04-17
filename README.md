@@ -21,7 +21,8 @@ TravelTip is an app that keeps a list of favorite locations
 - Displayed in the header
 - Location is active in the list (gold color)
 - Marker on the map
-- Reflected in query params 
+- Reflected in query params
+- Distance from the user is displayed 
 - Copy url to clipboard
 - Share via Web-Share API
 
@@ -31,6 +32,7 @@ Here is the format of the location object:
 {
     id: 'GEouN',
     name: 'Dahab, Egypt',
+    distance: 397.45,
     rate: 5,
     geo: {
       address: 'Dahab, South Sinai, Egypt',
@@ -51,7 +53,9 @@ export const locService = {
     save,
     setFilterBy,
     setSortBy,
-    getLocCountByRateMap
+    getLocCountByRateMap,
+    setUserLocation,
+    addDistanceFromUser
 }
 
 export const mapService = {
@@ -70,6 +74,12 @@ export const mapService = {
 // functions that are called from DOM are defined on a global app object
 
 window.app = {
+    onMapTouch,
+    openModal,
+    submitForm,
+    addLoc,
+    updateLoc,
+    onUpdateLoc,
     onRemoveLoc,
     onUpdateLoc,
     onSelectLoc,
