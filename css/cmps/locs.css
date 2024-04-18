@@ -5,7 +5,7 @@
     min-height: 100vh;
 }
 
-:has(input:checked) .locs-container {
+:has(.theme input:checked) .locs-container {
     background-color: var(--bg3);
     color: aliceblue;
 }
@@ -34,7 +34,7 @@
     
 }
 
-:has(input:checked) .loc-list li .muted{
+:has(.theme input:checked) .loc-list li .muted{
     color: var(--gray1);
 }
 
@@ -72,7 +72,7 @@
     padding: 0.3em;
 }
 
-:has(input:checked) .loc-filter{
+:has(.theme input:checked) .loc-filter{
     background-color: var(--bg1);
 }
 

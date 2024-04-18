@@ -22,7 +22,7 @@
     color: var(--color4);
 }
 
-:has(input:checked) .selected-loc {
+:has(.theme input:checked) .selected-loc {
     background-color: var(--bg3);
     color: whitesmoke;
 }

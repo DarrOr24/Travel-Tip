@@ -3,12 +3,12 @@ body {
     overflow-x: hidden;
 }
 
-:has(input:checked) body {
+:has(.theme input:checked)  body {
     background-color: #222;
     color: #eee;
 }
 
-:has(input:checked) header{
+:has(.theme input:checked)  header{
     background-color: var(--bg2);
     color: aliceblue;
 }
