@@ -1,6 +1,6 @@
 .selected-loc {
-    background-color: var(--bg3);
-    color: whitesmoke;
+    background-color: whitesmoke;
+    color: var(--bg3);
     max-height: 0em;
     height: 0;
     overflow: hidden;
@@ -20,4 +20,9 @@
 
 .loc-rate {
     color: var(--color4);
+}
+
+:has(input:checked) .selected-loc {
+    background-color: var(--bg3);
+    color: whitesmoke;
 }
